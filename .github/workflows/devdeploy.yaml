@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: dev
     env:
-      Aaccess_key: ${{ secrets.Aaccess_key }}
+      access_key: ${{ secrets.access_key }}
       secret_key: ${{ secrets.secret_key }}
     # needs: test
     steps:
@@ -61,11 +61,11 @@ jobs:
       - name: Terraform Plan
         run: terraform plan
         env:
-          Aaccess_key: ${{ secrets.Aaccess_key }}
+          access_key: ${{ secrets.access_key }}
           secret_key: ${{ secrets.secret_key }}
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
         env:
-          Aaccess_key: ${{ secrets.Aaccess_key }}
+          access_key: ${{ secrets.access_key }}
           secret_key: ${{ secrets.secret_key }}
