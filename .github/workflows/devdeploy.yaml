@@ -1,0 +1,65 @@
+name: Go Simple Application CI/CD
+
+# Event that triggers the workflow
+on:
+  push:
+    branches:
+      - main
+
+# Type of activity performed through this workflow
+jobs:
+  # Testing - Unit test, integration test
+  test:
+    # Runners
+    # 1. GitHub provided
+    # 2. Self Hosted runner (Created by us)
+    runs-on: ubuntu-latest
+    name: Execute unit and integration tests for this project
+    
+    steps:
+      # Checkout code copy for actions
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Setup golang runtime for our project
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.21.2'  # Specify your Go version
+
+      # Perform golang app testing
+      - name: Test
+        run: go test -v ./...
+
+  # Provision the infra
+  infra-provisioning:
+    name: Provision the infrastructure
+    runs-on: ubuntu-latest
+    environment: dev
+    env:
+      Aaccess_key: ${{ secrets.Aaccess_key }}
+      secret_key: ${{ secrets.secret_key }}
+    # needs: test
+    steps:
+
+      - name: Update packages
+        run: |
+          sudo apt install unzip
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.0
+
+      # Checkout code copy for actions
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Terraform Init
+        run: terraform init -reconfigure
+
+      - name: Terraform Plan
+        run: terraform plan
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
