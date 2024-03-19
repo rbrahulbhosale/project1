@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 resource "aws_instance" "app_with_GitHuActions" {
-  ami           = "ami-007020fd9c84e18c7"
+  ami           = "ami-013168dc3850ef002"
   instance_type = "t2.micro"
   key_name      = "mykey"
   vpc_security_group_ids = [aws_security_group.allow_8089.id]
